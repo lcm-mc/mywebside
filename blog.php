@@ -1,7 +1,7 @@
 <?php
 $current_page = 'blog';
-$page_title = '博客 - ' . getConfig('site_name');
 require_once __DIR__ . '/includes/header.php';
+$page_title = '博客 - ' . getConfig('site_name');
 
 // 分页
 $page = max(1, intval($_GET['page'] ?? 1));

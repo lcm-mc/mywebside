@@ -1,7 +1,7 @@
 <?php
 $current_page = 'home';
-$page_title = getConfig('site_title');
 require_once __DIR__ . '/includes/header.php';
+$page_title = getConfig('site_title');
 
 // 获取最新文章
 $latest_posts = getPosts(5, 0);

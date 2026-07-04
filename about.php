@@ -1,7 +1,7 @@
 <?php
 $current_page = 'about';
-$page_title = '关于 - ' . getConfig('site_name');
 require_once __DIR__ . '/includes/header.php';
+$page_title = '关于 - ' . getConfig('site_name');
 ?>
 
 <div class="card">
