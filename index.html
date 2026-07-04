@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCM_MC · 个人站 & 博客</title>
+    <!-- 纯色 + 微圆角 + 亮/暗色主题 · 无渐变 -->
+    <style>
+        /* ========== CSS 变量 : 亮色/暗色 ========== */
+        :root {
+            /* 亮色主题 (默认) */
+            --bg-body: #f7f5f0;
+            --bg-card: #ffffff;
+            --bg-nav: #ffffff;
+            --bg-code: #f0ede8;
+            --text-primary: #1e1e1e;
+            --text-secondary: #3a3a3a;
+            --text-muted: #5e5e5e;
+            --border-color: #d6d2cb;
+            --accent: #2b5f8a;          /* 主色调 – 沉稳蓝 */
+            --accent-hover: #1d4466;
+            --shadow: 0 2px 6px rgba(0,0,0,0.04);
+            --radius: 8px;              /* 小圆角 */
+            --transition: 0.2s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #1c1c1c;
+            --bg-card: #262626;
+            --bg-nav: #1e1e1e;
+            --bg-code: #2d2d2d;
+            --text-primary: #eaeaea;
+            --text-secondary: #cacaca;
+            --text-muted: #a0a0a0;
+            --border-color: #3e3e3e;
+            --accent: #6a9ec4;
+            --accent-hover: #8ab3d6;
+            --shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        /* ========== 重置 & 基础 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 1.5rem 1rem;
+            transition: background-color var(--transition), color var(--transition);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color var(--transition);
+        }
+        a:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
+        /* ========== 导航 ========== */
+        .navbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--bg-nav);
+            padding: 0.8rem 1.4rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            transition: background-color var(--transition), border var(--transition);
+        }
+
+        .nav-logo {
+            font-weight: 600;
+            font-size: 1.25rem;
+            letter-spacing: 0.5px;
+            color: var(--text-primary);
+        }
+        .nav-logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            align-items: center;
+        }
+        .nav-links a {
+            font-weight: 500;
+            color: var(--text-secondary);
+            padding: 0.2rem 0.1rem;
+            border-bottom: 2px solid transparent;
+            transition: 0.15s;
+        }
+        .nav-links a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            text-decoration: none;
+        }
+        .nav-links a.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* 主题切换按钮 */
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: 0.2s;
+            box-shadow: var(--shadow);
+            line-height: 1.8;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .theme-toggle:hover {
+            background: var(--border-color);
+        }
+
+        /* ========== 卡片风格 ========== */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem 1.8rem;
+            margin-bottom: 1.8rem;
+            box-shadow: var(--shadow);
+            transition: background-color var(--transition), border var(--transition), box-shadow var(--transition);
+        }
+
+        .card-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+        .card-sub {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 1.2rem 0;
+            opacity: 0.6;
+        }
+
+        /* ========== 个人信息列表 ========== */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.4rem 1.5rem;
+        }
+        .info-item {
+            display: flex;
+            align-items: baseline;
+            padding: 0.25rem 0;
+        }
+        .info-label {
+            font-weight: 500;
+            min-width: 70px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .info-value {
+            color: var(--text-primary);
+            word-break: break-word;
+        }
+
+        /* ========== 博客文章预览 ========== */
+        .blog-item {
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+        }
+        .blog-item:last-child {
+            border-bottom: none;
+        }
+        .blog-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .blog-meta {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin: 0.2rem 0 0.3rem 0;
+        }
+        .blog-excerpt {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        .tag {
+            display: inline-block;
+            background: var(--bg-code);
+            padding: 0.1rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            margin-right: 0.3rem;
+        }
+
+        /* ========== 联系 / 社交 ========== */
+        .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem 1.8rem;
+            padding: 0.5rem 0;
+        }
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: var(--bg-body);
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            transition: 0.15s;
+        }
+        .social-links a:hover {
+            background: var(--border-color);
+            text-decoration: none;
+        }
+
+        .contact-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 2rem;
+            margin: 0.3rem 0;
+        }
+        .contact-row strong {
+            min-width: 70px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ========== 页脚 ========== */
+        .footer {
+            text-align: center;
+            padding: 2rem 0 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 600px) {
+            body { padding: 1rem 0.8rem; }
+            .navbar { flex-direction: column; align-items: stretch; gap: 0.6rem; }
+            .nav-links { justify-content: center; }
+            .info-grid { grid-template-columns: 1fr; }
+            .card { padding: 1.2rem; }
+            .social-links { gap: 0.6rem; }
+        }
+
+        /* ========== 页面切换 (SPA 风格) ========== */
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+
+        /* ========== 小工具 ========== */
+        .mt-1 { margin-top: 0.8rem; }
+        .mb-1 { margin-bottom: 0.8rem; }
+        .flex { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+        .text-muted { color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+    <!-- ========== 导航 ========== -->
+    <nav class="navbar">
+        <div class="nav-logo">LCM<span>_MC</span></div>
+        <div class="nav-links">
+            <a href="#" data-page="home" class="active">首页</a>
+            <a href="#" data-page="blog">博客</a>
+            <a href="#" data-page="about">关于</a>
+            <a href="#" data-page="contact">联系</a>
+            <button class="theme-toggle" id="themeToggle">🌓 主题</button>
+        </div>
+    </nav>
+
+    <!-- ========== 页面：首页 ========== -->
+    <div id="page-home" class="page active">
+        <div class="card">
+            <h1 class="card-title">👋 你好，我是 LCM_MC</h1>
+            <p style="font-size: 1.05rem; color: var(--text-secondary);">
+                喜爱编程、二次元、游戏
+            </p>
+            <hr>
+            <div class="info-grid">
+                <div class="info-item"><span class="info-label">📧 邮箱</span><span class="info-value">lcm_mc@lcm-mc.top</span></div>
+                <div class="info-item"><span class="info-label">🐧 QQ</span><span class="info-value">2776039192</span></div>
+                <div class="info-item"><span class="info-label">💬 微信</span><span class="info-value">lcm_mc</span></div>
+                <div class="info-item"><span class="info-label">📱 WhatsApp</span><span class="info-value"><a href="https://api.whatsapp.com/qr/FP3VXE5E2IXII1" target="_blank">点击跳转</a></span></div>
+            </div>
+            <div class="social-links mt-1">
+                <a href="https://github.com/lcm-mc" target="_blank">🐙 GitHub</a>
+                <a href="https://youtube.com/@LCM_MC-Youtube" target="_blank">▶️ YouTube</a>
+                <a href="https://space.bilibili.com/3493268817971411" target="_blank">📺 BiliBili </a>
+                <a href="https://visitor.passport.weibo.cn/visitor/visitor?entry=sinawap&a=enter&url=https%3A%2F%2Fm.weibo.cn%2Fu%2F8015324512%3Fuid%3D8015324512%26t%3Duserinfo%26_T_WM%3D04459d6d6bc975e3a26bc8432f12c1c0&domain=.weibo.cn&sudaref=&ua=php-sso_sdk_client-0.6.36&_rand=1782618861.7891" target="_blank">📱 微博（链接不可用请搜索LCM_MC）</a>
+                <a href="https://music.163.com/#/user/home?id=?????" target="_blank">🎵 网易云（链接不可用请搜索LCM_MC）</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 页面：博客 ========== -->
+    <div id="page-blog" class="page">
+        <div class="card">
+            <h1 class="card-title">📝 博客</h1>
+            <p class="card-sub">一些想法、技术笔记与日常</p>
+
+            <div class="blog-item">
+                <div class="blog-title">云墨笔记 15</div>
+                <div class="blog-meta">2026.06.10 · 23:15</div>
+                <div class="blog-excerpt">本次更新将代码存储移到了 gitee，并且修复了一些问题</div>
+                <div style="margin-top: 0.3rem;"><span class="tag">Python</span><span class="tag">云墨笔记</span><span class="tag">软件</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 页面：关于 ========== -->
+    <div id="page-about" class="page">
+            <hr>
+            <h3 style="margin-bottom: 0.3rem;">💡 关于这个站点</h3>
+            <p style="color: var(--text-secondary);">
+                静态个人网站 + 博客，使用 HTML + CSS + JavaScript
+                部署于 GitHub Pages
+            </p>
+        </div>
+    </div>
+
+    <!-- ========== 页面：联系 ========== -->
+    <div id="page-contact" class="page">
+        <div class="card">
+            <h1 class="card-title">📬 联系方式</h1>
+            <p class="card-sub">欢迎交流，一起聊聊天</p>
+            <div style="display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.8rem;">
+                <div class="contact-row"><strong>📧 邮箱</strong> <a href="mailto:lcm_mc@lcm-mc.top">lcm_mc@lcm-mc.top</a></div>
+                <div class="contact-row"><strong>🐧 QQ</strong> 2776039192</div>
+                <div class="contact-row"><strong>💬 微信</strong> lcm_mc</div>
+                <div class="contact-row"><strong>📱 WhatsApp</strong> <a href="https://api.whatsapp.com/qr/FP3VXE5E2IXII1" target="_blank">点击跳转到 WhatsApp</a></div>
+            </div>
+            <hr>
+            <h3 style="margin-bottom: 0.2rem;">🌐 社交媒体</h3>
+            <div class="social-links">
+                <a href="https://github.com/lcm-mc" target="_blank">🐙 GitHub</a>
+                <a href="https://youtube.com/@LCM_MC-Youtube" target="_blank">▶️ YouTube</a>
+                <a href="https://space.bilibili.com/3493268817971411" target="_blank">📺 BiliBili</a>
+                <a href="#" target="_blank">📱 微博 (@LCM_MC)</a>
+                <a href="#" target="_blank">🎵 网易云 (@lcm_mc)</a>
+            </div>
+            <p style="margin-top: 0.8rem; color: var(--text-muted);">（部分社交账号链接待完善，欢迎通过邮箱或 QQ 联系）</p>
+        </div>
+    </div>
+
+    <!-- ========== 页脚 ========== -->
+    <div class="footer">
+        © 2026 LCM_MC · 与你的日常 便是奇迹！
+    </div>
+
+    <!-- ========== JS：页面导航 + 主题切换 ========== -->
+    <script>
+        (function() {
+            // ---- 页面切换 ----
+            const pages = {
+                home: document.getElementById('page-home'),
+                blog: document.getElementById('page-blog'),
+                about: document.getElementById('page-about'),
+                contact: document.getElementById('page-contact')
+            };
+            const navLinks = document.querySelectorAll('[data-page]');
+
+            function showPage(pageId) {
+                // 隐藏所有页面
+                Object.keys(pages).forEach(id => {
+                    pages[id].classList.remove('active');
+                });
+                // 显示目标页面
+                if (pages[pageId]) {
+                    pages[pageId].classList.add('active');
+                }
+                // 更新导航高亮
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.dataset.page === pageId) {
+                        link.classList.add('active');
+                    }
+                });
+                // 滚动到顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.dataset.page;
+                    if (page) {
+                        showPage(page);
+                        // 更新 URL hash (可选)
+                        history.pushState(null, '', '#' + page);
+                    }
+                });
+            });
+
+            // 监听 hash 变化 (浏览器后退/前进)
+            window.addEventListener('hashchange', function() {
+                const hash = window.location.hash.slice(1) || 'home';
+                if (pages[hash]) {
+                    showPage(hash);
+                }
+            });
+
+            // 初始加载时根据 hash 显示页面
+            const initHash = window.location.hash.slice(1) || 'home';
+            if (pages[initHash]) {
+                showPage(initHash);
+            } else {
+                showPage('home');
+            }
+
+            // ---- 主题切换 (亮/暗) ----
+            const themeToggle = document.getElementById('themeToggle');
+            const html = document.documentElement;
+
+            // 读取保存的主题
+            let currentTheme = localStorage.getItem('theme') || 'light';
+            if (currentTheme === 'dark') {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ 亮色';
+            } else {
+                html.removeAttribute('data-theme');
+                themeToggle.textContent = '🌓 暗色';
+            }
+
+            themeToggle.addEventListener('click', function() {
+                const isDark = html.getAttribute('data-theme') === 'dark';
+                if (isDark) {
+                    html.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                    themeToggle.textContent = '🌓 暗色';
+                } else {
+                    html.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    themeToggle.textContent = '☀️ 亮色';
+                }
+            });
+
+            // ---- 处理导航里点击"查看所有文章" 等内部链接 ----
+            // 给所有带 data-page 的 a 添加统一行为 (已处理)
+            // 额外：如果点击的 a 有 data-page 但不在 nav 内 (比如首页的 "→ 查看所有文章")
+            document.querySelectorAll('[data-page]').forEach(el => {
+                // 避免重复绑定
+                if (!el.dataset.listener) {
+                    el.dataset.listener = 'true';
+                    el.addEventListener('click', function(e) {
+                        const page = this.dataset.page;
+                        if (page && pages[page]) {
+                            e.preventDefault();
+                            showPage(page);
+                            history.pushState(null, '', '#' + page);
+                        }
+                    });
+                }
+            });
+
+        })();
+    </script>
+</body>
+</html>
