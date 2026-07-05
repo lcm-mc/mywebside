@@ -133,3 +133,23 @@ function requireLogin() {
         exit;
     }
 }
+
+// 验证 Cloudflare Turnstile
+function verifyTurnstile($response) {
+    if (empty($response)) {
+        return false;
+    }
+    $data = [
+        'secret' => TURNSTILE_SECRET_KEY,
+        'response' => $response,
+        'remoteip' => getClientIP(),
+    ];
+    $ch = curl_init('https://challenges.cloudflare.com/turnstile/v0/siteverify');
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $result = curl_exec($ch);
+    curl_close($ch);
+    $json = json_decode($result, true);
+    return isset($json['success']) && $json['success'] === true;
+}

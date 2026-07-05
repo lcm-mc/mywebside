@@ -6,6 +6,10 @@ define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');
 
+// Cloudflare Turnstile
+define('TURNSTILE_SITE_KEY', '0x4AAAAAADv9d1bRTyZkKTZG');
+define('TURNSTILE_SECRET_KEY', '0x4AAAAAADv9d8goFQLGTamVlPc63l1pa7c');
+
 // 数据库连接
 try {
     $pdo = new PDO(

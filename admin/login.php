@@ -1,15 +1,19 @@
 <?php
 session_start();
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
+    $turnstileResponse = $_POST['cf-turnstile-response'] ?? '';
     
     if (empty($username) || empty($password)) {
         $error = '请填写用户名和密码';
+    } elseif (!verifyTurnstile($turnstileResponse)) {
+        $error = '人机验证失败，请重试';
     } else {
         $stmt = $pdo->prepare("SELECT * FROM admins WHERE username = ?");
         $stmt->execute([$username]);
@@ -33,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管理员登录</title>
     <link rel="stylesheet" href="/assets/style.css">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
         body {
             display: flex;
@@ -104,6 +109,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
                 <label>密码</label>
                 <input type="password" name="password" required>
+            </div>
+            <div class="form-group" style="display: flex; justify-content: center; margin: 1rem 0;">
+                <div class="cf-turnstile" data-sitekey="<?= TURNSTILE_SITE_KEY ?>"></div>
             </div>
             <button type="submit" class="btn">登录</button>
         </form>
