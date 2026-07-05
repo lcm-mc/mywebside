@@ -3,6 +3,18 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/functions.php';
 session_start();
 
+// 安全响应头
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: SAMEORIGIN');
+header('X-XSS-Protection: 1; mode=block');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+
+// 全局 IP 限流（每 IP 每分钟最多 60 次请求）
+if (isRateLimited('global_' . getClientIP(), 60, 60)) {
+    http_response_code(429);
+    die('请求过于频繁，请稍后再试');
+}
+
 $site_name = getConfig('site_name');
 $site_title = getConfig('site_title');
 $current_page = $current_page ?? 'home';

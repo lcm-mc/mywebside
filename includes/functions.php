@@ -26,11 +26,79 @@ function getPost($id) {
     return $stmt->fetch();
 }
 
-// 增加浏览量
+// 获取真实客户端 IP（兼容 Cloudflare）
+function getClientIP() {
+    $headers = [
+        'HTTP_CF_CONNECTING_IP',  // Cloudflare
+        'HTTP_X_REAL_IP',         // Nginx proxy
+        'HTTP_X_FORWARDED_FOR',   // 通用代理
+        'REMOTE_ADDR',
+    ];
+    foreach ($headers as $header) {
+        if (!empty($_SERVER[$header])) {
+            $ip = explode(',', $_SERVER[$header])[0];
+            $ip = trim($ip);
+            if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                return $ip;
+            }
+        }
+    }
+    return '0.0.0.0';
+}
+
+// IP 限流检查（返回 true 表示被限流）
+function isRateLimited($key = 'global', $maxRequests = 30, $windowSeconds = 60) {
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    $now = time();
+    $rateKey = 'rate_' . $key;
+    
+    if (!isset($_SESSION[$rateKey])) {
+        $_SESSION[$rateKey] = [];
+    }
+    
+    // 清除过期记录
+    $_SESSION[$rateKey] = array_filter($_SESSION[$rateKey], function($t) use ($now, $windowSeconds) {
+        return ($now - $t) < $windowSeconds;
+    });
+    
+    // 检查是否超限
+    if (count($_SESSION[$rateKey]) >= $maxRequests) {
+        return true;
+    }
+    
+    $_SESSION[$rateKey][] = $now;
+    return false;
+}
+
+// 安全地增加浏览量（Session去重 + IP限流）
 function incrementViews($id) {
     global $pdo;
+    
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    
+    // 1. Session 去重：同一会话同一篇文章只计 1 次
+    if (!isset($_SESSION['viewed_posts'])) {
+        $_SESSION['viewed_posts'] = [];
+    }
+    if (in_array($id, $_SESSION['viewed_posts'])) {
+        return; // 已计过数，跳过
+    }
+    
+    // 2. IP 限流：同一 IP 每分钟最多 30 次浏览
+    if (isRateLimited('views_' . getClientIP(), 30, 60)) {
+        return; // 被限流，跳过
+    }
+    
+    // 通过检查，增加计数
     $stmt = $pdo->prepare("UPDATE posts SET views = views + 1 WHERE id = ?");
     $stmt->execute([$id]);
+    
+    // 记录已浏览
+    $_SESSION['viewed_posts'][] = $id;
 }
 
 // 格式化日期
