@@ -3,7 +3,7 @@
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'lcm_blog');
 define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_PASS', '120818lcm');
 define('DB_CHARSET', 'utf8mb4');
 
 // Cloudflare Turnstile
