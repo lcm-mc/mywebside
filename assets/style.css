@@ -2,8 +2,8 @@
 :root {
     /* 亮色主题 (默认) */
     --bg-body: #f7f5f0;
-    --bg-card: #ffffff;
-    --bg-nav: #ffffff;
+    --bg-card: rgba(255, 255, 255, 0.85);
+    --bg-nav: rgba(255, 255, 255, 0.85);
     --bg-code: #f0ede8;
     --text-primary: #1e1e1e;
     --text-secondary: #3a3a3a;
@@ -18,8 +18,8 @@
 
 [data-theme="dark"] {
     --bg-body: #1c1c1c;
-    --bg-card: #262626;
-    --bg-nav: #1e1e1e;
+    --bg-card: rgba(38, 38, 38, 0.85);
+    --bg-nav: rgba(30, 30, 30, 0.85);
     --bg-code: #2d2d2d;
     --text-primary: #eaeaea;
     --text-secondary: #cacaca;
@@ -40,12 +40,18 @@
 body {
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
     background-color: var(--bg-body);
+    background-image: url('assets/A.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     color: var(--text-primary);
     line-height: 1.6;
     padding: 1.5rem 1rem;
     transition: background-color var(--transition), color var(--transition);
     max-width: 900px;
     margin: 0 auto;
+    min-height: 100vh;
 }
 
 a {
@@ -255,6 +261,12 @@ hr {
     font-size: 0.85rem;
     border-top: 1px solid var(--border-color);
     margin-top: 2rem;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius);
+}
+
+[data-theme="dark"] .footer {
+    background: rgba(0, 0, 0, 0.2);
 }
 
 /* ========== 文章详情 ========== */
