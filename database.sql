@@ -35,6 +35,19 @@ CREATE TABLE IF NOT EXISTS site_config (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 留言表
+CREATE TABLE IF NOT EXISTS guestbook_messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) DEFAULT NULL,
+    content TEXT NOT NULL,
+    ip VARCHAR(45) DEFAULT NULL,
+    status ENUM('pending','approved') DEFAULT 'approved',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_status (status),
+    INDEX idx_created (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- 插入默认管理员 (密码: admin123)
 INSERT INTO admins (username, password, email) VALUES
 ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2UDheYZgzDy', 'lcm_mc@lcm-mc.top');

@@ -6,6 +6,7 @@ d:\Myside\
 ├── index.php              # 首页
 ├── blog.php               # 博客列表页
 ├── post.php               # 文章详情页
+├── guestbook.php          # 留言板页面
 ├── about.php              # 关于页面
 ├── contact.php            # 联系页面
 ├── database.sql           # 数据库初始化脚本
@@ -82,6 +83,7 @@ php -S localhost:8000
 **前台页面：**
 - 首页：http://localhost/
 - 博客：http://localhost/blog.php
+- 留言：http://localhost/guestbook.php
 - 关于：http://localhost/about.php
 - 联系：http://localhost/contact.php
 
@@ -137,6 +139,15 @@ php -S localhost:8000
 - config_key: 配置键
 - config_value: 配置值
 - updated_at: 更新时间
+
+### guestbook_messages - 留言表
+- id: 主键
+- name: 留言昵称
+- email: 留言邮箱（可选）
+- content: 留言内容
+- ip: 留言者 IP
+- status: 状态（approved/pending）
+- created_at: 创建时间
 
 ## 修改密码
 

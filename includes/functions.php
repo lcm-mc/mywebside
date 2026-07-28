@@ -18,6 +18,22 @@ function getPostCount() {
     return $stmt->fetchColumn();
 }
 
+// 获取留言列表
+function getMessages($limit = 20) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT * FROM guestbook_messages WHERE status = 'approved' ORDER BY created_at DESC LIMIT :limit");
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll();
+}
+
+// 添加留言
+function addMessage($name, $email, $content, $ip) {
+    global $pdo;
+    $stmt = $pdo->prepare("INSERT INTO guestbook_messages (name, email, content, ip, status) VALUES (?, ?, ?, ?, 'approved')");
+    return $stmt->execute([$name, $email, $content, $ip]);
+}
+
 // 获取单篇文章
 function getPost($id) {
     global $pdo;

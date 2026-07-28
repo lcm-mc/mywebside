@@ -34,6 +34,7 @@ $current_page = $current_page ?? 'home';
             <a href="/index.php" class="<?= $current_page === 'home' ? 'active' : '' ?>">首页</a>
             <a href="/blog.php" class="<?= $current_page === 'blog' ? 'active' : '' ?>">博客</a>
             <a href="/about.php" class="<?= $current_page === 'about' ? 'active' : '' ?>">关于</a>
+            <a href="/guestbook.php" class="<?= $current_page === 'guestbook' ? 'active' : '' ?>">留言</a>
             <a href="/contact.php" class="<?= $current_page === 'contact' ? 'active' : '' ?>">联系</a>
             <button class="theme-toggle" id="themeToggle">🌓 主题</button>
         </div>
